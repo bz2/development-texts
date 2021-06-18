@@ -23,6 +23,61 @@ This may then be further aggregated as desired -- for example, into an equivalen
 
 ## Process
 
+### Defining Categories
+
+Annotation categories can be defined per map from the map data sheets.
+Example below assumes a new "Annotation Categories" sheet is added with the following structure:
+
+| Name | Icon Url | Selected Icon Url | Help Text | Uses Mask | Description |
+|-------------|--------|----------|---------|---------|---------|
+| Interesting | //host.com/icon.svg | //host.com/inverse.svg | I find this interesting because... | true | Interesting category description |
+| Question | //host.com/icon.svg | //host.com/inverse.svg | I have a question... | 1 | Question category description |
+
+This is then transformed into RDF through an annotation categories transform.
+
+```
+[
+    {
+        'sheet': 'Annotation Categories',
+        'lets': {
+            'iri': 'vm:AnnotationCategory/{row[Name].as_slug}',
+        },
+        'triples': [
+            ('{iri}', 'rdf:type', 'vm:AnnotationCategory'),
+            ('{iri}', 'vm:name', '{row[Name].as_text}'),
+            ('{iri}', 'vm:hasIcon', '{row[Icon Url].as_text}'),
+            ('{iri}', 'vm:hasAltIcon', '{row[Selected Icon Url].as_text}'),
+            ('{iri}', 'vm:useMask', '{row[Uses Mask].as_json}'),
+            ('{iri}', 'vm:display', '{row[Help Text].as_text}'),
+            ('{iri}', 'vm:description', '{row[Description].as_text}'),
+        ],
+    }
+]
+```
+
+E.g. output in Turtle format:
+```
+<http://visual-meaning.com/rdf/AnnotationCategory/interesting> a vm:AnnotationCategory ;
+    vm:description "Interesting category description" ;
+    vm:display "I find this interesting because…" ;
+    vm:hasAltIcon "//host.com/icon-inverse.svg" ;
+    vm:hasIcon "//host.com/icon.svg" ;
+    vm:name "Interesting" ;
+    vm:useMask "true" .
+```
+
+`Uses Mask` signifies whether icons should be used as a CSS masks, or as simple background images.
+CSS masks allow the icons to have branded colors, but come with the drawback that only the alpha values are considered when applying. This essentialy makes masked icons monochrome - opaque areas have the brand primary color applied, while fully transparent ones end up being white. Everything in between is a mix of primary and white.
+
+#### Maps with no categories
+
+Maps which do not need different annotation categories can still enable commenting by defining a single row in the "Annotation Categories" sheet.
+Example below uses the default comment icons.
+
+| Name | Icon Url | Selected Icon Url | Help Text | Uses Mask | Description |
+|-------------|--------|----------|---------|---------|---------|
+| Comment | //opatlas-live.s3.amazonaws.com/icons/Comment-Mask.svg | //opatlas-live.s3.amazonaws.com/icons/Comment-Inverse-Mask.svg |  | true | The default comment category |
+
 ### User identity
 
 A user is authorised to access a map by including their email address (or a wildcarded version of it) in the whitelist for the map's project.
