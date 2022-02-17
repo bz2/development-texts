@@ -72,20 +72,20 @@ Any of the three examples above are valid. We run a conversion script on label e
 
 If we have a layer name that consists of just a detail level range, we automatically prepend a `@` to the `forLayer` property, so a layer called `4-6` will get converted to `@4-6`.
 
-The conversion script also removes any prefix characters denoting semantic/non-semantic layers (i.e. `-` or `~` characters) and so these are ignored in the examples below - they can be included or not, and it will make no difference to the resulting `forLayer` values.
+Illustrator requires that a `~` character be prepended to the layer name in order to export it. Illustrator also accepts `-~` as a valid export prefix. In practice, all exported layer names will start with one of these two prefix options.
 
 With that in mind, the following are valid layer names depending on your use case and view configuration.
 
-- `Stressful Homeowner Experience`
-- `4-6`
-- `@4-6`
-- `Stressful Homeowner Experience@4-6`
+- `~Stressful Homeowner Experience`
+- `~4-6`
+- `~@4-6`
+- `-~Stressful Homeowner Experience@4-6`
 
 The following are *not* valid layer names.
 
-- `Stressful Homeowner Experience 4-6`
-- `Stressful Homeowner Experience-4-6`
-- `-4-6`
+- `~Stressful Homeowner Experience 4-6`
+- `~Stressful Homeowner Experience-4-6`
+- `~#4-6`
 
 Including any separator between the lens name and the detail level range that is not an `@` character is a no go. Similarly, prepending a bare detail level range with anything that's not an `@` character is also not going to fly.
 
