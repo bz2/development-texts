@@ -12,12 +12,9 @@ Generate a cert for a target domain using DNS challenge type:
 
     sudo certbot certonly --manual --preferred-challenges dns -d domain.com
 
-This will tell you to add a DNS TXT record for that domain. Most of our domains are now managed through Amazon Route53, so
-go there in your browser, find the Hosted Zone that corresponds to the domain you're generating the cert for, and then add
-the TXT record.
+This will tell you to add a DNS TXT record for that domain. Most of our domains are now managed through Amazon Route53, so go there in your browser, find the Hosted Zone that corresponds to the domain you're generating the cert for, and then add the TXT record.
 
-Once the TXT record is saved, tell certbot to continue. It should report success and save your certificate and signing chain to
-`/etc/letsencrypt/live/domain.com`
+Once the TXT record is saved, tell certbot to continue. It should report success and save your certificate and signing chain to `/etc/letsencrypt/live/domain.com`
 
 ### Alternatively...
 
@@ -25,8 +22,7 @@ There's a plugin that lets us automate doing the TXT record faffing in Route53. 
 
     sudo apt install python3-certbot-dns-route53
 
-This uses standard AWS CLI credentials, but since certbot needs to be run as root, we need to symlink our local user's AWS
-credentials directory to an equivalent location for root:
+This uses standard AWS CLI credentials, but since certbot needs to be run as root, we need to symlink our local user's AWS credentials directory to an equivalent location for root:
 
     sudo -s
     ln -s /home/alightwing/.aws ~/.aws
@@ -42,15 +38,15 @@ This won't renew the cert if it's not close to expiring. To force a renewal:
 
 ### Convert Let's Encrypt cert files to Private Certificate
 
-Azure cert attachments need to come in the form of Private Key Certificates (.pfx) so we need to convert our .pem files from 
-Let's Encrypt to .pfx. This is done with `openssl`:
+Azure cert attachments need to come in the form of Private Key Certificates (.pfx) so we need to convert our .pem files from Let's Encrypt to .pfx. This is done with `openssl`:
 
     sudo openssl pkcs12 -export -out domain.com_fullchain.pfx -inkey /etc/letsencrypt/live/domain.com/privkey.pem -in /etc/letsencrypt/live/domain.com/fullchain.pem
 
-On Ubuntu/other Linux OS, you will also have to `chown` the file so that your browser can access it, as otherwise it will be 
-owned by root.
+The command will prompt (twice) to enter an "Export Password" to make the output key non-plaintext. The password could be blank, but the upload form on Azure will not submit with an empty value, so supply one.
 
-    chown <username>:<username> domain.com_fullchain.pfx
+On Ubuntu/other Linux OS, you will also have to `chown` the file so that your browser can access it, as otherwise it will be owned by root.
+
+    sudo chown <username>:<username> domain.com_fullchain.pfx
 
 where `username` is your Linux username.
 
@@ -73,5 +69,6 @@ Go to the Web App in the Azure Portal and open the "TLS/SSL settings" menu from 
 
 Click on "Private Key Certificates (.pfx)" and upload the .pfx file.
 
-Then click on "Bindings" and then "Add TLS/SSL Binding". Select the correct custom domain and the corresponding Private 
-Certificate. Select `SNI SSL` as the TLS/SSL type, and then click "Add Binding".
+Then click on "Bindings" and then "Add TLS/SSL Binding". Select the correct custom domain and the corresponding Private Certificate. Select `SNI SSL` as the TLS/SSL type, and then click "Add Binding".
+
+If replacing an expired cert, the binding has to be deleted and recreated as it's connected to the specific uploaded certs.
