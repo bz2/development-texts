@@ -28,3 +28,4 @@ Collection of development-led text documents related to technical decision makin
 
 * [2020-08-18 PC revert](postmortems/2020-08-18_pc_revert.md)
 * [2021-05-03 ecosys timeouts](postmortems/2021-05-03_ecosys_timeouts.md)
+* [2023-03-20 Azure dev outage](postmortems/2023-03-20_azure_dev_outage.md)
