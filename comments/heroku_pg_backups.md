@@ -1,3 +1,5 @@
+> This document has been superseded by subsequent work, we have both the paid database plan with a rolling 4 day window, and backups that are encrypted and sent to external cloud storage on a daily basis.
+
 # Backing up the Postgres Databases in Heroku
 
 The Heroku deployment of the SMP is backed by a PostgreSQL database that holds all of the Django model data for users, auth, projects, maps etc., and all of the map model data. If this database fails for whatever reason the SMP will go down, and if we are forced to restore from a backup we could potentially be looking at significant data loss and impact on the business.
