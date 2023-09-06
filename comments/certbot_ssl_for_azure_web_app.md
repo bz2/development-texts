@@ -40,7 +40,7 @@ This won't renew the cert if it's not close to expiring. To force a renewal:
 
 Azure cert attachments need to come in the form of Private Key Certificates (.pfx) so we need to convert our .pem files from Let's Encrypt to .pfx. This is done with `openssl`:
 
-    sudo openssl pkcs12 -export -out $DOMAIN_fullchain.pfx -inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -legacy
+    sudo openssl pkcs12 -export -out ${DOMAIN}_fullchain.pfx -inkey /etc/letsencrypt/live/${DOMAIN}/privkey.pem -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -legacy
 
 Note `-legacy` is required with openssl 3 as Azure's requirements for certificates don't match the new encryption defaults.
 
@@ -48,7 +48,7 @@ The command will prompt (twice) to enter an "Export Password" to make the output
 
 On Ubuntu/other Linux OS, you will also have to `chown` the file so that your browser can access it, as otherwise it will be owned by root.
 
-    sudo chown $USER:$USER $DOMAIN_fullchain.pfx
+    sudo chown $USER:$USER ${DOMAIN}_fullchain.pfx
 
 ## In the Azure Portal
 
