@@ -21,19 +21,17 @@ Not required with new image that already includes this.
 
 ## Backup
 
-Restoring the dump to the database:
+Creating the dump of the database:
 
-    pg_dump -FcOx --quote-all-identifiers "{paste DATABASE_URL}" > db.dump
+    pg_dump -Fc -Ox --quote-all-identifiers "${DATABASE_URL}" > db.dump
 
 Operations to upload the dump (using `python3`):
 
     >>> from azure.storage.blob import BlobClient
     >>> conn_str = "..."  # from storage access
     >>> container = "..."  # should be name of a private bucket
-    >>> c = BlobClient(conn_str, container, "db.dump")
+    >>> c = BlobClient.from_connection_string(conn_str, container, "db.dump")
     >>> with open('db.dump', 'rb') as f: c.upload_blob(f.read())
-
-(last command from memory, may be slightly wrong)
 
 
 ## Restore
@@ -43,13 +41,13 @@ Operations to download the dump (using `python3`):
     >>> from azure.storage.blob import BlobClient
     >>> conn_str = "..."  # take from storage access
     >>> container = "..."  # should be name of a private bucket
-    >>> c = BlobClient(conn_str, container, "db.dump")
+    >>> c = BlobClient.from_connection_string(conn_str, container, "db.dump")
     >>> r = c.download_blob()
     >>> with open('db.dump', 'wb') as f: f.write(r.content_as_bytes())
 
 Restoring the dump to the database:
 
-    pg_restore -cO -d "{paste DATABASE_URL}" db.dump
+    pg_restore -cO -d "${DATABASE_URL}" db.dump
 
 
 ## Discoveries
