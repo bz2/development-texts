@@ -24,6 +24,8 @@ Done using [Firefox Profiler] from Developer Tools.
 
 Sadly the profiler does not [support source maps] so to get useful function names out it's important to run against non-minified javascript. So, best to run multiple profiles, as the overall timings are better indications against the staging server, but need locally served javascript to get a good idea of where in the code time is being spent.
 
+For reasonable first-load timings, it's important to either clear the browser cache before capturing the profile, or run with a 'disable cache' flag from the developer tools enabled.
+
 There are also profilers for other browsers that could be used to compare results.
 
 Quality of network connection matters for the HTTP timings, and device matters for the browser and javascript timings.
